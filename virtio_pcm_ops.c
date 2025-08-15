@@ -393,9 +393,11 @@ static int virtsnd_pcm_trigger(struct snd_pcm_substream *substream, int command)
 		return virtsnd_ctl_msg_send_sync(snd, msg);
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 		vss->suspended = true;
+		fallthrough;
 		/* fallthrough */
 	case SNDRV_PCM_TRIGGER_STOP:
 		vss->stopped = true;
+		fallthrough;
 		/* fallthrough */
 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
 		spin_lock_irqsave(&vss->lock, flags);
