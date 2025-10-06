@@ -14,14 +14,14 @@
 #include <sound/core.h>
 #include "include/uapi/linux/virtio_snd.h"
 
-#define VIRTIO_ID_SOUND		25
+#define VIRTIO_ID_SOUND 25
 
 #include "virtio_ctl_msg.h"
 #include "virtio_pcm.h"
 
-#define VIRTIO_SND_CARD_DRIVER	"virtio-snd"
-#define VIRTIO_SND_CARD_NAME	"VirtIO SoundCard"
-#define VIRTIO_SND_PCM_NAME	"VirtIO PCM"
+#define VIRTIO_SND_CARD_DRIVER "virtio-snd"
+#define VIRTIO_SND_CARD_NAME "VirtIO SoundCard"
+#define VIRTIO_SND_PCM_NAME "VirtIO PCM"
 
 struct virtio_jack;
 struct virtio_pcm_substream;
@@ -97,14 +97,12 @@ virtsnd_event_queue(struct virtio_snd *snd)
 	return &snd->queues[VIRTIO_SND_VQ_EVENT];
 }
 
-static inline struct virtio_snd_queue *
-virtsnd_tx_queue(struct virtio_snd *snd)
+static inline struct virtio_snd_queue *virtsnd_tx_queue(struct virtio_snd *snd)
 {
 	return &snd->queues[VIRTIO_SND_VQ_TX];
 }
 
-static inline struct virtio_snd_queue *
-virtsnd_rx_queue(struct virtio_snd *snd)
+static inline struct virtio_snd_queue *virtsnd_rx_queue(struct virtio_snd *snd)
 {
 	return &snd->queues[VIRTIO_SND_VQ_RX];
 }
@@ -122,8 +120,7 @@ int virtsnd_jack_parse_cfg(struct virtio_snd *snd);
 
 int virtsnd_jack_build_devs(struct virtio_snd *snd);
 
-void virtsnd_jack_event(struct virtio_snd *snd,
-			struct virtio_snd_event *event);
+void virtsnd_jack_event(struct virtio_snd *snd, struct virtio_snd_event *event);
 
 int virtsnd_chmap_parse_cfg(struct virtio_snd *snd);
 

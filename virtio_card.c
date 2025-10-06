@@ -146,8 +146,8 @@ static int virtsnd_find_vqs(struct virtio_snd *snd)
 
 	n = virtqueue_get_vring_size(vqs[VIRTIO_SND_VQ_EVENT]);
 
-	snd->event_msgs = kmalloc_array(n, sizeof(*snd->event_msgs),
-					GFP_KERNEL);
+	snd->event_msgs =
+		kmalloc_array(n, sizeof(*snd->event_msgs), GFP_KERNEL);
 	if (!snd->event_msgs)
 		return -ENOMEM;
 
@@ -440,9 +440,7 @@ static const struct virtio_device_id id_table[] = {
 	{ 0 },
 };
 
-static unsigned int features[] = {
-	VIRTIO_SND_F_CTLS
-};
+static unsigned int features[] = { VIRTIO_SND_F_CTLS };
 
 static struct virtio_driver virtsnd_driver = {
 	.driver.name = KBUILD_MODNAME,

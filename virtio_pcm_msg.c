@@ -217,11 +217,9 @@ int virtsnd_pcm_msg_send(struct virtio_pcm_substream *vss, unsigned long offset,
 
 	for (i = start; i <= end; i++) {
 		struct virtio_pcm_msg *msg = vss->msgs[i];
-		struct scatterlist *psgs[] = {
-			&msg->sgs[PCM_MSG_SG_XFER],
-			&msg->sgs[PCM_MSG_SG_DATA],
-			&msg->sgs[PCM_MSG_SG_STATUS]
-		};
+		struct scatterlist *psgs[] = { &msg->sgs[PCM_MSG_SG_XFER],
+					       &msg->sgs[PCM_MSG_SG_DATA],
+					       &msg->sgs[PCM_MSG_SG_STATUS] };
 		unsigned long n;
 
 		n = period_bytes - (offset % period_bytes);
@@ -333,9 +331,8 @@ static void virtsnd_pcm_msg_complete(struct virtio_pcm_msg *msg,
 	if (vss->xfer_enabled) {
 		struct snd_pcm_runtime *runtime = vss->substream->runtime;
 
-		runtime->delay =
-			bytes_to_frames(runtime,
-					le32_to_cpu(msg->status.latency_bytes));
+		runtime->delay = bytes_to_frames(
+			runtime, le32_to_cpu(msg->status.latency_bytes));
 
 		schedule_work(&vss->elapsed_period);
 	} else if (!vss->msg_count) {

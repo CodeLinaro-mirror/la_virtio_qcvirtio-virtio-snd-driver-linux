@@ -109,21 +109,16 @@ static int virtsnd_pcm_build_hw(struct virtio_pcm_substream *vss,
 	 * TODO: set SNDRV_PCM_INFO_{BATCH,BLOCK_TRANSFER} if device supports
 	 * only message-based transport.
 	 */
-	vss->hw.info =
-		SNDRV_PCM_INFO_MMAP |
-		SNDRV_PCM_INFO_MMAP_VALID |
-		SNDRV_PCM_INFO_BATCH |
-		SNDRV_PCM_INFO_BLOCK_TRANSFER |
-		SNDRV_PCM_INFO_INTERLEAVED |
-		SNDRV_PCM_INFO_PAUSE |
+	vss->hw.info = SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_MMAP_VALID |
+		       SNDRV_PCM_INFO_BATCH | SNDRV_PCM_INFO_BLOCK_TRANSFER |
+		       SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_PAUSE |
 #if KERNEL_VERSION(5, 16, 0) <= LINUX_VERSION_CODE
-		SNDRV_PCM_INFO_NO_REWINDS |
+		       SNDRV_PCM_INFO_NO_REWINDS |
 #endif
-		SNDRV_PCM_INFO_SYNC_APPLPTR;
+		       SNDRV_PCM_INFO_SYNC_APPLPTR;
 
 	if (!info->channels_min || info->channels_min > info->channels_max) {
-		dev_err(&vdev->dev,
-			"SID %u: invalid channel range [%u %u]\n",
+		dev_err(&vdev->dev, "SID %u: invalid channel range [%u %u]\n",
 			vss->sid, info->channels_min, info->channels_max);
 		return -EINVAL;
 	}
@@ -200,17 +195,17 @@ static int virtsnd_pcm_build_hw(struct virtio_pcm_substream *vss,
 	 *   Smin = minimum supported sample size in bytes,
 	 *   Rmin = minimum supported frame rate.
 	 */
-	vss->hw.period_bytes_min =
-		sample_min * vss->hw.channels_min * pcm_period_ms_min *
-		(vss->hw.rate_min / MSEC_PER_SEC);
+	vss->hw.period_bytes_min = sample_min * vss->hw.channels_min *
+				   pcm_period_ms_min *
+				   (vss->hw.rate_min / MSEC_PER_SEC);
 
 	/*
 	 * We must ensure that the maximum period size is enough to store
 	 * pcm_period_ms_max ms for the combination (Cmax, Smax, Rmax).
 	 */
-	vss->hw.period_bytes_max =
-		sample_max * vss->hw.channels_max * pcm_period_ms_max *
-		(vss->hw.rate_max / MSEC_PER_SEC);
+	vss->hw.period_bytes_max = sample_max * vss->hw.channels_max *
+				   pcm_period_ms_max *
+				   (vss->hw.rate_max / MSEC_PER_SEC);
 
 	return 0;
 }
@@ -446,10 +441,9 @@ int virtsnd_pcm_build_devs(struct virtio_snd *snd)
 			if (!stream->nsubstreams)
 				continue;
 
-			stream->substreams =
-				devm_kcalloc(&vdev->dev, stream->nsubstreams,
-					     sizeof(*stream->substreams),
-					     GFP_KERNEL);
+			stream->substreams = devm_kcalloc(
+				&vdev->dev, stream->nsubstreams,
+				sizeof(*stream->substreams), GFP_KERNEL);
 			if (!stream->substreams)
 				return -ENOMEM;
 

@@ -239,9 +239,8 @@ void virtsnd_ctl_msg_cancel_all(struct virtio_snd *snd)
 
 	spin_lock_irqsave(&queue->lock, flags);
 	while (!list_empty(&snd->ctl_msgs)) {
-		struct virtio_snd_msg *msg =
-			list_first_entry(&snd->ctl_msgs, struct virtio_snd_msg,
-					 list);
+		struct virtio_snd_msg *msg = list_first_entry(
+			&snd->ctl_msgs, struct virtio_snd_msg, list);
 
 		virtsnd_ctl_msg_complete(msg);
 	}

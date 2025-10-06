@@ -54,10 +54,10 @@ struct virtio_jack {
 static const char *virtsnd_jack_get_label(struct virtio_jack *vjack)
 {
 	unsigned int defconf = vjack->defconf;
-	unsigned int device =
-		(defconf & AC_DEFCFG_DEVICE) >> AC_DEFCFG_DEVICE_SHIFT;
-	unsigned int location =
-		(defconf & AC_DEFCFG_LOCATION) >> AC_DEFCFG_LOCATION_SHIFT;
+	unsigned int device = (defconf & AC_DEFCFG_DEVICE) >>
+			      AC_DEFCFG_DEVICE_SHIFT;
+	unsigned int location = (defconf & AC_DEFCFG_LOCATION) >>
+				AC_DEFCFG_LOCATION_SHIFT;
 
 	switch (device) {
 	case AC_JACK_LINE_OUT:
@@ -102,8 +102,8 @@ static const char *virtsnd_jack_get_label(struct virtio_jack *vjack)
 static int virtsnd_jack_get_type(struct virtio_jack *vjack)
 {
 	unsigned int defconf = vjack->defconf;
-	unsigned int device =
-		(defconf & AC_DEFCFG_DEVICE) >> AC_DEFCFG_DEVICE_SHIFT;
+	unsigned int device = (defconf & AC_DEFCFG_DEVICE) >>
+			      AC_DEFCFG_DEVICE_SHIFT;
 
 	switch (device) {
 	case AC_JACK_LINE_OUT:

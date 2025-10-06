@@ -334,8 +334,7 @@ static int virtsnd_pcm_prepare(struct snd_pcm_substream *substream)
 #endif
 
 	memset(&vss->pcm_indirect, 0, sizeof(vss->pcm_indirect));
-	vss->pcm_indirect.sw_buffer_size =
-		vss->pcm_indirect.hw_buffer_size =
+	vss->pcm_indirect.sw_buffer_size = vss->pcm_indirect.hw_buffer_size =
 		snd_pcm_lib_buffer_bytes(substream);
 
 	msg = virtsnd_pcm_ctl_msg_alloc(vss, VIRTIO_SND_R_PCM_PREPARE,
@@ -393,9 +392,11 @@ static int virtsnd_pcm_trigger(struct snd_pcm_substream *substream, int command)
 		return virtsnd_ctl_msg_send_sync(snd, msg);
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 		vss->suspended = true;
+		fallthrough;
 		/* fallthrough */
 	case SNDRV_PCM_TRIGGER_STOP:
 		vss->stopped = true;
+		fallthrough;
 		/* fallthrough */
 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
 		spin_lock_irqsave(&vss->lock, flags);
@@ -451,9 +452,8 @@ static int virtsnd_pcm_sync_stop(struct snd_pcm_substream *substream)
 	 * Thus, we consider the absence of I/O messages in the queue as an
 	 * indication that the substream has been released.
 	 */
-	rc = wait_event_interruptible_timeout(vss->msg_empty,
-					      !virtsnd_pcm_msg_pending_num(vss),
-					      js);
+	rc = wait_event_interruptible_timeout(
+		vss->msg_empty, !virtsnd_pcm_msg_pending_num(vss), js);
 	if (rc <= 0) {
 		dev_warn(&snd->vdev->dev, "SID %u: failed to flush I/O queue\n",
 			 vss->sid);
@@ -479,9 +479,8 @@ virtsnd_pcm_pb_pointer(struct snd_pcm_substream *substream)
 {
 	struct virtio_pcm_substream *vss = snd_pcm_substream_chip(substream);
 
-	return snd_pcm_indirect_playback_pointer(substream,
-		&vss->pcm_indirect,
-		vss->hw_ptr);
+	return snd_pcm_indirect_playback_pointer(substream, &vss->pcm_indirect,
+						 vss->hw_ptr);
 }
 
 /**
@@ -497,9 +496,8 @@ virtsnd_pcm_cp_pointer(struct snd_pcm_substream *substream)
 {
 	struct virtio_pcm_substream *vss = snd_pcm_substream_chip(substream);
 
-	return snd_pcm_indirect_capture_pointer(substream,
-		&vss->pcm_indirect,
-		vss->hw_ptr);
+	return snd_pcm_indirect_capture_pointer(substream, &vss->pcm_indirect,
+						vss->hw_ptr);
 }
 
 static void virtsnd_pcm_trans_copy(struct snd_pcm_substream *substream,

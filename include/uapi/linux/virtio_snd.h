@@ -44,10 +44,7 @@ enum {
  */
 
 /* supported dataflow directions */
-enum {
-	VIRTIO_SND_D_OUTPUT = 0,
-	VIRTIO_SND_D_INPUT
-};
+enum { VIRTIO_SND_D_OUTPUT = 0, VIRTIO_SND_D_INPUT };
 
 enum {
 	/* jack control request types */
@@ -134,9 +131,7 @@ struct virtio_snd_jack_hdr {
 };
 
 /* supported jack features */
-enum {
-	VIRTIO_SND_JACK_F_REMAP = 0
-};
+enum { VIRTIO_SND_JACK_F_REMAP = 0 };
 
 struct virtio_snd_jack_info {
 	/* common header */
@@ -185,32 +180,32 @@ enum {
 /* supported PCM sample formats */
 enum {
 	/* analog formats (width / physical width) */
-	VIRTIO_SND_PCM_FMT_IMA_ADPCM = 0,	/*  4 /  4 bits */
-	VIRTIO_SND_PCM_FMT_MU_LAW,		/*  8 /  8 bits */
-	VIRTIO_SND_PCM_FMT_A_LAW,		/*  8 /  8 bits */
-	VIRTIO_SND_PCM_FMT_S8,			/*  8 /  8 bits */
-	VIRTIO_SND_PCM_FMT_U8,			/*  8 /  8 bits */
-	VIRTIO_SND_PCM_FMT_S16,			/* 16 / 16 bits */
-	VIRTIO_SND_PCM_FMT_U16,			/* 16 / 16 bits */
-	VIRTIO_SND_PCM_FMT_S18_3,		/* 18 / 24 bits */
-	VIRTIO_SND_PCM_FMT_U18_3,		/* 18 / 24 bits */
-	VIRTIO_SND_PCM_FMT_S20_3,		/* 20 / 24 bits */
-	VIRTIO_SND_PCM_FMT_U20_3,		/* 20 / 24 bits */
-	VIRTIO_SND_PCM_FMT_S24_3,		/* 24 / 24 bits */
-	VIRTIO_SND_PCM_FMT_U24_3,		/* 24 / 24 bits */
-	VIRTIO_SND_PCM_FMT_S20,			/* 20 / 32 bits */
-	VIRTIO_SND_PCM_FMT_U20,			/* 20 / 32 bits */
-	VIRTIO_SND_PCM_FMT_S24,			/* 24 / 32 bits */
-	VIRTIO_SND_PCM_FMT_U24,			/* 24 / 32 bits */
-	VIRTIO_SND_PCM_FMT_S32,			/* 32 / 32 bits */
-	VIRTIO_SND_PCM_FMT_U32,			/* 32 / 32 bits */
-	VIRTIO_SND_PCM_FMT_FLOAT,		/* 32 / 32 bits */
-	VIRTIO_SND_PCM_FMT_FLOAT64,		/* 64 / 64 bits */
+	VIRTIO_SND_PCM_FMT_IMA_ADPCM = 0, /*  4 /  4 bits */
+	VIRTIO_SND_PCM_FMT_MU_LAW, /*  8 /  8 bits */
+	VIRTIO_SND_PCM_FMT_A_LAW, /*  8 /  8 bits */
+	VIRTIO_SND_PCM_FMT_S8, /*  8 /  8 bits */
+	VIRTIO_SND_PCM_FMT_U8, /*  8 /  8 bits */
+	VIRTIO_SND_PCM_FMT_S16, /* 16 / 16 bits */
+	VIRTIO_SND_PCM_FMT_U16, /* 16 / 16 bits */
+	VIRTIO_SND_PCM_FMT_S18_3, /* 18 / 24 bits */
+	VIRTIO_SND_PCM_FMT_U18_3, /* 18 / 24 bits */
+	VIRTIO_SND_PCM_FMT_S20_3, /* 20 / 24 bits */
+	VIRTIO_SND_PCM_FMT_U20_3, /* 20 / 24 bits */
+	VIRTIO_SND_PCM_FMT_S24_3, /* 24 / 24 bits */
+	VIRTIO_SND_PCM_FMT_U24_3, /* 24 / 24 bits */
+	VIRTIO_SND_PCM_FMT_S20, /* 20 / 32 bits */
+	VIRTIO_SND_PCM_FMT_U20, /* 20 / 32 bits */
+	VIRTIO_SND_PCM_FMT_S24, /* 24 / 32 bits */
+	VIRTIO_SND_PCM_FMT_U24, /* 24 / 32 bits */
+	VIRTIO_SND_PCM_FMT_S32, /* 32 / 32 bits */
+	VIRTIO_SND_PCM_FMT_U32, /* 32 / 32 bits */
+	VIRTIO_SND_PCM_FMT_FLOAT, /* 32 / 32 bits */
+	VIRTIO_SND_PCM_FMT_FLOAT64, /* 64 / 64 bits */
 	/* digital formats (width / physical width) */
-	VIRTIO_SND_PCM_FMT_DSD_U8,		/*  8 /  8 bits */
-	VIRTIO_SND_PCM_FMT_DSD_U16,		/* 16 / 16 bits */
-	VIRTIO_SND_PCM_FMT_DSD_U32,		/* 32 / 32 bits */
-	VIRTIO_SND_PCM_FMT_IEC958_SUBFRAME	/* 32 / 32 bits */
+	VIRTIO_SND_PCM_FMT_DSD_U8, /*  8 /  8 bits */
+	VIRTIO_SND_PCM_FMT_DSD_U16, /* 16 / 16 bits */
+	VIRTIO_SND_PCM_FMT_DSD_U32, /* 32 / 32 bits */
+	VIRTIO_SND_PCM_FMT_IEC958_SUBFRAME /* 32 / 32 bits */
 };
 
 /* supported PCM frame rates */
@@ -300,47 +295,47 @@ struct virtio_snd_chmap_hdr {
 
 /* standard channel position definition */
 enum {
-	VIRTIO_SND_CHMAP_NONE = 0,	/* undefined */
-	VIRTIO_SND_CHMAP_NA,		/* silent */
-	VIRTIO_SND_CHMAP_MONO,		/* mono stream */
-	VIRTIO_SND_CHMAP_FL,		/* front left */
-	VIRTIO_SND_CHMAP_FR,		/* front right */
-	VIRTIO_SND_CHMAP_RL,		/* rear left */
-	VIRTIO_SND_CHMAP_RR,		/* rear right */
-	VIRTIO_SND_CHMAP_FC,		/* front center */
-	VIRTIO_SND_CHMAP_LFE,		/* low frequency (LFE) */
-	VIRTIO_SND_CHMAP_SL,		/* side left */
-	VIRTIO_SND_CHMAP_SR,		/* side right */
-	VIRTIO_SND_CHMAP_RC,		/* rear center */
-	VIRTIO_SND_CHMAP_FLC,		/* front left center */
-	VIRTIO_SND_CHMAP_FRC,		/* front right center */
-	VIRTIO_SND_CHMAP_RLC,		/* rear left center */
-	VIRTIO_SND_CHMAP_RRC,		/* rear right center */
-	VIRTIO_SND_CHMAP_FLW,		/* front left wide */
-	VIRTIO_SND_CHMAP_FRW,		/* front right wide */
-	VIRTIO_SND_CHMAP_FLH,		/* front left high */
-	VIRTIO_SND_CHMAP_FCH,		/* front center high */
-	VIRTIO_SND_CHMAP_FRH,		/* front right high */
-	VIRTIO_SND_CHMAP_TC,		/* top center */
-	VIRTIO_SND_CHMAP_TFL,		/* top front left */
-	VIRTIO_SND_CHMAP_TFR,		/* top front right */
-	VIRTIO_SND_CHMAP_TFC,		/* top front center */
-	VIRTIO_SND_CHMAP_TRL,		/* top rear left */
-	VIRTIO_SND_CHMAP_TRR,		/* top rear right */
-	VIRTIO_SND_CHMAP_TRC,		/* top rear center */
-	VIRTIO_SND_CHMAP_TFLC,		/* top front left center */
-	VIRTIO_SND_CHMAP_TFRC,		/* top front right center */
-	VIRTIO_SND_CHMAP_TSL,		/* top side left */
-	VIRTIO_SND_CHMAP_TSR,		/* top side right */
-	VIRTIO_SND_CHMAP_LLFE,		/* left LFE */
-	VIRTIO_SND_CHMAP_RLFE,		/* right LFE */
-	VIRTIO_SND_CHMAP_BC,		/* bottom center */
-	VIRTIO_SND_CHMAP_BLC,		/* bottom left center */
-	VIRTIO_SND_CHMAP_BRC		/* bottom right center */
+	VIRTIO_SND_CHMAP_NONE = 0, /* undefined */
+	VIRTIO_SND_CHMAP_NA, /* silent */
+	VIRTIO_SND_CHMAP_MONO, /* mono stream */
+	VIRTIO_SND_CHMAP_FL, /* front left */
+	VIRTIO_SND_CHMAP_FR, /* front right */
+	VIRTIO_SND_CHMAP_RL, /* rear left */
+	VIRTIO_SND_CHMAP_RR, /* rear right */
+	VIRTIO_SND_CHMAP_FC, /* front center */
+	VIRTIO_SND_CHMAP_LFE, /* low frequency (LFE) */
+	VIRTIO_SND_CHMAP_SL, /* side left */
+	VIRTIO_SND_CHMAP_SR, /* side right */
+	VIRTIO_SND_CHMAP_RC, /* rear center */
+	VIRTIO_SND_CHMAP_FLC, /* front left center */
+	VIRTIO_SND_CHMAP_FRC, /* front right center */
+	VIRTIO_SND_CHMAP_RLC, /* rear left center */
+	VIRTIO_SND_CHMAP_RRC, /* rear right center */
+	VIRTIO_SND_CHMAP_FLW, /* front left wide */
+	VIRTIO_SND_CHMAP_FRW, /* front right wide */
+	VIRTIO_SND_CHMAP_FLH, /* front left high */
+	VIRTIO_SND_CHMAP_FCH, /* front center high */
+	VIRTIO_SND_CHMAP_FRH, /* front right high */
+	VIRTIO_SND_CHMAP_TC, /* top center */
+	VIRTIO_SND_CHMAP_TFL, /* top front left */
+	VIRTIO_SND_CHMAP_TFR, /* top front right */
+	VIRTIO_SND_CHMAP_TFC, /* top front center */
+	VIRTIO_SND_CHMAP_TRL, /* top rear left */
+	VIRTIO_SND_CHMAP_TRR, /* top rear right */
+	VIRTIO_SND_CHMAP_TRC, /* top rear center */
+	VIRTIO_SND_CHMAP_TFLC, /* top front left center */
+	VIRTIO_SND_CHMAP_TFRC, /* top front right center */
+	VIRTIO_SND_CHMAP_TSL, /* top side left */
+	VIRTIO_SND_CHMAP_TSR, /* top side right */
+	VIRTIO_SND_CHMAP_LLFE, /* left LFE */
+	VIRTIO_SND_CHMAP_RLFE, /* right LFE */
+	VIRTIO_SND_CHMAP_BC, /* bottom center */
+	VIRTIO_SND_CHMAP_BLC, /* bottom left center */
+	VIRTIO_SND_CHMAP_BRC /* bottom right center */
 };
 
 /* maximum possible number of channels */
-#define VIRTIO_SND_CHMAP_MAX_SIZE	18
+#define VIRTIO_SND_CHMAP_MAX_SIZE 18
 
 struct virtio_snd_chmap_info {
 	/* common header */

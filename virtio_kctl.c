@@ -84,8 +84,7 @@ static int virtsnd_kctl_info(struct snd_kcontrol *kcontrol,
 		if (i >= uinfo->value.enumerated.items)
 			return -EINVAL;
 
-		if (strscpy(uinfo->value.enumerated.name,
-			    kctl->items[i].item,
+		if (strscpy(uinfo->value.enumerated.name, kctl->items[i].item,
 			    sizeof(uinfo->value.enumerated.name))) {
 			/* get rid of gcc warning */
 		}
@@ -330,13 +329,13 @@ static int virtsnd_kctl_get_enum_items(struct virtio_snd *snd, unsigned int cid)
 	unsigned int n = le32_to_cpu(kinfo->value.enumerated.items);
 	struct scatterlist sg;
 
-	msg = virtsnd_ctl_msg_alloc(sizeof(*hdr),
-				    sizeof(struct virtio_snd_hdr), GFP_KERNEL);
+	msg = virtsnd_ctl_msg_alloc(sizeof(*hdr), sizeof(struct virtio_snd_hdr),
+				    GFP_KERNEL);
 	if (!msg)
 		return -ENOMEM;
 
-	kctl->items = devm_kcalloc(&vdev->dev, n, sizeof(*kctl->items),
-				   GFP_KERNEL);
+	kctl->items =
+		devm_kcalloc(&vdev->dev, n, sizeof(*kctl->items), GFP_KERNEL);
 	if (!kctl->items) {
 		virtsnd_ctl_msg_unref(msg);
 		return -ENOMEM;
