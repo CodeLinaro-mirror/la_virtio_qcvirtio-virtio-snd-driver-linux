@@ -114,6 +114,12 @@ static void virtsnd_event_notify_cb(struct virtqueue *vqueue)
 static int virtsnd_find_vqs(struct virtio_snd *snd)
 {
 	struct virtio_device *vdev = snd->vdev;
+	struct virtqueue *vqs[VIRTIO_SND_VQ_MAX] = { 0 };
+	unsigned int i;
+	unsigned int n;
+	int rc;
+
+#if KERNEL_VERSION(6, 10, 0) > LINUX_VERSION_CODE
 	static vq_callback_t *callbacks[VIRTIO_SND_VQ_MAX] = {
 		[VIRTIO_SND_VQ_CONTROL] = virtsnd_ctl_notify_cb,
 		[VIRTIO_SND_VQ_EVENT] = virtsnd_event_notify_cb,
@@ -126,13 +132,21 @@ static int virtsnd_find_vqs(struct virtio_snd *snd)
 		[VIRTIO_SND_VQ_TX] = "virtsnd-tx",
 		[VIRTIO_SND_VQ_RX] = "virtsnd-rx"
 	};
-	struct virtqueue *vqs[VIRTIO_SND_VQ_MAX] = { 0 };
-	unsigned int i;
-	unsigned int n;
-	int rc;
 
 	rc = virtio_find_vqs(vdev, VIRTIO_SND_VQ_MAX, vqs, callbacks, names,
 			     NULL);
+#else
+	struct virtqueue_info vqs_info[VIRTIO_SND_VQ_MAX] = {
+		[VIRTIO_SND_VQ_CONTROL] = { "virtsnd-ctl",
+					    virtsnd_ctl_notify_cb },
+		[VIRTIO_SND_VQ_EVENT] = { "virtsnd-event",
+					  virtsnd_event_notify_cb },
+		[VIRTIO_SND_VQ_TX] = { "virtsnd-tx", virtsnd_pcm_tx_notify_cb },
+		[VIRTIO_SND_VQ_RX] = { "virtsnd-rx", virtsnd_pcm_rx_notify_cb },
+	};
+
+	rc = virtio_find_vqs(vdev, VIRTIO_SND_VQ_MAX, vqs, vqs_info, NULL);
+#endif
 	if (rc) {
 		dev_err(&vdev->dev, "failed to initialize virtqueues\n");
 		return rc;
@@ -371,12 +385,19 @@ static void virtsnd_remove(struct virtio_device *vdev)
 		snd_card_free(snd->card);
 
 	vdev->config->del_vqs(vdev);
+
+#if KERNEL_VERSION(5, 17, 0) > LINUX_VERSION_CODE
+	/* missing d9679d0013a6 (virtio: wrap config->reset calls) */
 	vdev->config->reset(vdev);
+#else
+	virtio_reset_device(vdev);
+#endif
 
 	for (i = 0; snd->substreams && i < snd->nsubstreams; ++i) {
 		struct virtio_pcm_substream *vss = &snd->substreams[i];
 
 		cancel_work_sync(&vss->elapsed_period);
+		cancel_work_sync(&vss->xrun_work);
 		virtsnd_pcm_msg_free(vss);
 	}
 
@@ -400,10 +421,20 @@ static int virtsnd_freeze(struct virtio_device *vdev)
 	virtsnd_ctl_msg_cancel_all(snd);
 
 	vdev->config->del_vqs(vdev);
-	vdev->config->reset(vdev);
 
-	for (i = 0; i < snd->nsubstreams; ++i)
-		cancel_work_sync(&snd->substreams[i].elapsed_period);
+#if KERNEL_VERSION(5, 17, 0) > LINUX_VERSION_CODE
+	/* missing d9679d0013a6 (virtio: wrap config->reset calls) */
+	vdev->config->reset(vdev);
+#else
+	virtio_reset_device(vdev);
+#endif
+
+	for (i = 0; i < snd->nsubstreams; ++i) {
+		struct virtio_pcm_substream *vss = &snd->substreams[i];
+
+		cancel_work_sync(&vss->elapsed_period);
+		cancel_work_sync(&vss->xrun_work);
+	}
 
 	kfree(snd->event_msgs);
 	snd->event_msgs = NULL;
@@ -444,7 +475,13 @@ static unsigned int features[] = { VIRTIO_SND_F_CTLS };
 
 static struct virtio_driver virtsnd_driver = {
 	.driver.name = KBUILD_MODNAME,
+#if KERNEL_VERSION(6, 9, 0) > LINUX_VERSION_CODE
+	/*
+	 * missing ffe6176b7f53
+	 * (virtio: store owner from modules with register_virtio_driver())
+	 */
 	.driver.owner = THIS_MODULE,
+#endif
 	.id_table = id_table,
 	.feature_table = features,
 	.feature_table_size = ARRAY_SIZE(features),

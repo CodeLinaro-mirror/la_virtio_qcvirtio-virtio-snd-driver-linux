@@ -234,10 +234,12 @@ static int virtsnd_pcm_hw_params(struct snd_pcm_substream *substream,
 		return -EBADFD;
 	}
 
-	rc = snd_pcm_lib_alloc_vmalloc_buffer(substream,
-					      params_buffer_bytes(hw_params));
+#if KERNEL_VERSION(5, 5, 0) > LINUX_VERSION_CODE
+	rc = snd_pcm_lib_alloc_vmalloc_buffer(
+		substream, PAGE_ALIGN(params_buffer_bytes(hw_params)));
 	if (rc < 0)
 		return rc;
+#endif
 
 	rc = virtsnd_pcm_dev_set_params(vss, params_buffer_bytes(hw_params),
 					params_period_bytes(hw_params),
@@ -279,7 +281,9 @@ static int virtsnd_pcm_hw_free(struct snd_pcm_substream *substream)
 	if (!virtsnd_pcm_msg_pending_num(vss)) {
 		virtsnd_pcm_msg_free(vss);
 
+#if KERNEL_VERSION(5, 5, 0) > LINUX_VERSION_CODE
 		return snd_pcm_lib_free_vmalloc_buffer(substream);
+#endif
 	}
 
 	return 0;
@@ -325,7 +329,6 @@ static int virtsnd_pcm_prepare(struct snd_pcm_substream *substream)
 			return rc;
 	}
 
-	vss->xfer_xrun = false;
 	vss->suspended = false;
 	vss->msg_count = 0;
 
@@ -574,7 +577,9 @@ const struct snd_pcm_ops virtsnd_pcm_ops[] = {
 		.trigger = virtsnd_pcm_trigger,
 		.pointer = virtsnd_pcm_pb_pointer,
 		.ack = virtsnd_pcm_pb_ack,
+#if KERNEL_VERSION(5, 5, 0) > LINUX_VERSION_CODE
 		.page = snd_pcm_lib_get_vmalloc_page,
+#endif
 #if KERNEL_VERSION(4, 18, 0) > LINUX_VERSION_CODE
 		.mmap = snd_pcm_lib_mmap_vmalloc,
 #endif
@@ -589,7 +594,9 @@ const struct snd_pcm_ops virtsnd_pcm_ops[] = {
 		.trigger = virtsnd_pcm_trigger,
 		.pointer = virtsnd_pcm_cp_pointer,
 		.ack = virtsnd_pcm_cp_ack,
+#if KERNEL_VERSION(5, 5, 0) > LINUX_VERSION_CODE
 		.page = snd_pcm_lib_get_vmalloc_page,
+#endif
 #if KERNEL_VERSION(4, 18, 0) > LINUX_VERSION_CODE
 		.mmap = snd_pcm_lib_mmap_vmalloc,
 #endif

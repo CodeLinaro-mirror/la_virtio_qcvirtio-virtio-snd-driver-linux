@@ -1,1 +1,12 @@
-result
+*.cmd
+*.ko
+*.mod
+*.mod.c
+*.o
+Module.symvers
+modules.order
+.tmp_versions/
+
+# kdevelop local project files
+*.kdev4
+
